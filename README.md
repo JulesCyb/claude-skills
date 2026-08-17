@@ -132,7 +132,7 @@ Why that matters: between the research and the build of the starter repo, the MC
 
 | Version | What |
 |---|---|
-| **2.1.0** | Review round: trigger description scoped to AI projects, blueprint-neutral principle 10, evals for C and E plus a second negative case, E-scaffold clarified, example ADR linked, CI with repo self-checks |
+| **2.1.0** | Review round: trigger description scoped to AI projects (verified 8/8 against the eval matrix), blueprint-neutral principle 10, evals for C and E plus a second negative case, E-scaffold clarified, example ADR linked, CI with repo self-checks |
 | **2.0.0** | Translated to English; repo flattened and renamed (`claude-skills` → `ai-app-blueprints`, one repo = one skill); command is now `/ai-app-blueprints` |
 | **1.2.0** | Blueprint choice reframed: A is the default, B–E are exception exits with triggers; starter repo explicitly for A only |
 | **1.1.0** | Mobile clients: interview question extended, section in the architecture reference, ADR template 0005 |
