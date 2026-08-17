@@ -1,137 +1,120 @@
-# claude-skills
+# ai-app-blueprints
 
-Meine Claude-Code-Skills. Aktuell einer: **`ai-app-architecture`** – er trifft bei jedem Projektstart
-mit KI-Agenten dieselben, belegten Architekturentscheidungen, statt sie jedes Mal neu zu recherchieren.
+A Claude Code skill that makes the stack decision for AI-agent apps — once, in one interview, with receipts.
 
 <p align="center">
-  <img src="docs/ablauf.svg" alt="Ablauf des Skills: vom Satz „neues Projekt mit KI-Agenten“ über einen Fragenblock zur Blueprint-Wahl — A als Default-Pfad, B bis E als Ausnahme-Ausgänge — und weiter zu ADRs, CLAUDE.md und dem Projektgerüst" width="100%">
+  <img src="docs/flow.svg" alt="Flow of the skill: from saying 'new project with AI agents' through one question block to the blueprint decision — A as the default path, B through E as exception exits — and on to ADRs, CLAUDE.md, and the project scaffold" width="100%">
 </p>
 
-<p align="center"><sub><a href="https://excalidraw.com/#json=UWwbVWE2P_53Uja-sxB46,34RXBj8y5bIs3L4wWrKhww">Diagramm in Excalidraw öffnen und bearbeiten</a></sub></p>
+<p align="center"><sub><a href="https://excalidraw.com/#json=juWBda5kxa0ieqeo42w10,ncqE20m9pSF0WhPYZ3ObYA">Open and edit the diagram in Excalidraw</a></sub></p>
 
 ---
 
-## Das Problem
+## The problem
 
-Jedes neue KI-Projekt beginnt mit denselben Fragen: Welches Framework? Wo laufen die Modelle?
-Wie kommt der Agent an die Daten? Was, wenn morgen ein zweiter Mandant dazukommt? Und ist das
-DSGVO-mäßig überhaupt tragbar?
+Every AI project starts with the same argument: Which framework? Where do the models run? How does the agent reach the data? What happens when a second customer shows up? And will this survive a GDPR conversation?
 
-Diese Fragen werden fast immer neu recherchiert, meist unter Zeitdruck, und die Antwort landet
-nirgends. Sechs Wochen später weiß niemand mehr, warum es so gebaut wurde.
+Those questions get re-researched every time, usually under deadline pressure, and the answer lands nowhere. Six weeks later, nobody remembers why it was built that way.
 
-## Die Lösung
+## What this skill does
 
-Der Skill macht daraus einen festen Ablauf: **kurzes Interview → Blueprint → dokumentierte
-Entscheidung → optional fertiges Gerüst.** Grundlage ist eine Recherche vom August 2026, die als
-Referenzdateien im Repo liegt – nachlesbar und korrigierbar.
+It turns the argument into a routine: **one interview → one blueprint → documented decisions → a working scaffold.** The recommendations come from a written-down research pass (August 2026) that lives in this repo as reference files — readable, checkable, correctable.
 
-Die fünf Blueprints sind dabei keine gleichwertigen Menüpunkte. **Blueprint A ist der Default** –
-Python-Backend als API (FastAPI + PydanticAI), portabel genug, um später umzuziehen, ohne die
-Agent-Logik neu zu schreiben. Von A weicht der Skill nur ab, wenn eine Randbedingung es erzwingt:
+The point is **rapid prototyping without closing doors**: the default stack is the one you can build on *today* and still move to AWS, Azure, GCP, or fully self-hosted *later* — without rewriting the agent logic. Anything vendor-shaped stays behind an interface.
 
-| Auslöser | Ausgang |
+## One default, four exits
+
+The five blueprints are not five equal menu items. **Blueprint A is the default** — a Python backend as an API (FastAPI + PydanticAI), portable enough to relocate later. The skill leaves A only when a constraint forces it:
+
+| Trigger | Exit |
 |---|---|
-| Team ist TypeScript **und** das Produkt ist im Kern eine Chat-UI | **B** – TypeScript-Full-Stack |
-| Kunde liegt auf AWS | **C** – Bedrock / AgentCore |
-| Kunde liegt auf Azure / M365 | **D** – Azure AI Foundry |
-| Datenschutz streng, Self-Hosting Pflicht | **E** – self-hosted |
+| Team is TypeScript **and** the product is essentially a chat UI | **B** — TypeScript full-stack |
+| Client is on AWS | **C** — Bedrock / AgentCore |
+| Client is on Azure / M365 | **D** — Azure AI Foundry |
+| Strict data protection, self-hosting mandated | **E** — self-hosted |
 
-(Kunde auf GCP → Vertex/ADK, analog C/D.) Greift kein Auslöser, bleibt es A.
+(Client on GCP → Vertex/ADK, analogous to C/D.) No trigger? It stays A.
 
-Ein Template-Repo gibt es bewusst nur für den Default: Templates für Ausnahmefälle würden
-veralten, bevor sie je benutzt werden. Entsteht ein echtes B- oder E-Projekt, wird das Template
-daraus extrahiert – nicht vorher erfunden.
+There is deliberately only one starter repo — for the default. Starters for exception cases would rot before anyone used them. When a real B or E project happens, its starter gets extracted from it, not invented up front.
 
-## Installation
+## Install
 
-**Persönlich, für alle Projekte** – ein Symlink genügt, Claude Code folgt ihm:
+**Personal, for all projects** — one symlink, Claude Code follows it:
 
 ```bash
-git clone https://github.com/JulesCyb/claude-skills ~/src/claude-skills
+git clone https://github.com/JulesCyb/ai-app-blueprints ~/src/ai-app-blueprints
 mkdir -p ~/.claude/skills
-ln -s ~/src/claude-skills/ai-app-architecture ~/.claude/skills/ai-app-architecture
+ln -s ~/src/ai-app-blueprints ~/.claude/skills/ai-app-blueprints
 ```
 
-Ein `git pull` aktualisiert den Skill dann in allen Projekten gleichzeitig.
+A `git pull` then updates the skill for every project at once.
 
-**Nur in einem Projekt:** den Ordner `ai-app-architecture/` nach `.claude/skills/` kopieren und
-mitcommitten – dann hat jeder im Repo den Skill.
+**Per project:** copy this repo's contents into `.claude/skills/ai-app-blueprints/` and commit — everyone in the repo gets the skill.
 
-**Fürs Team:** als Plugin in einem Marketplace veröffentlichen oder über die Managed Settings der
-Organisation ausrollen.
+**For a team:** publish it as a plugin in a marketplace, or roll it out via your organization's managed settings.
 
-## Nutzung
+## Use
 
-Der Skill springt von selbst an, sobald es um ein neues KI-Projekt, einen Tech-Stack oder eine
-Architekturfrage geht. Direkt aufrufen geht auch:
+The skill activates on its own whenever a new AI project, a tech stack, or an architecture question comes up. Direct invocation works too:
 
 ```
-/ai-app-architecture
-/ai-app-architecture Kundenprojekt Azure, mehrere Mandanten, Android-App geplant
+/ai-app-blueprints
+/ai-app-blueprints client project on Azure, multiple tenants, Android app planned
 ```
 
-Dann kommt **ein** Fragenblock mit sieben Fragen – nicht sieben Rückfragen nacheinander. Was du
-nicht beantwortest, wird als Default angenommen und benannt.
+You get **one** block of seven questions — not seven follow-ups in a row. Anything you skip is assumed as a stated default.
 
-## Was dabei herauskommt
+## What you get
 
-- `docs/adr/0001-architektur.md` – die Entscheidung mit Begründung und Alternativen
-- `CLAUDE.md` – Projektgedächtnis für Claude Code, ausgefüllt statt generisch
-- weitere ADRs, aber nur wenn wirklich etwas entschieden wurde (Mandanten, Modellzugang, Hosting, Mobile)
-- auf Wunsch ein lauffähiges Projektgerüst – bei Blueprint A aus **[ai-app-template](https://github.com/JulesCyb/ai-app-template)**, bei B–E eine minimale Struktur laut Blueprint
+- `docs/adr/0001-architecture.md` — the decision, with reasoning and alternatives
+- `CLAUDE.md` — project memory for Claude Code, filled in rather than generic
+- more ADRs, but only when something was actually decided (tenancy, model access, hosting, mobile)
+- on request, a running scaffold — for blueprint A from **[ai-app-starter](https://github.com/JulesCyb/ai-app-starter)**, for B–E a minimal structure per blueprint
 
-Grundregel: **kein Code ohne ADR.** Erst die Entscheidung dokumentieren, dann bauen.
+Ground rule: **no code without an ADR.** Decide first, then build.
 
-## Was im Repo liegt
+## What's in the repo
 
 ```
-ai-app-architecture/
-├── SKILL.md                          Ablauf und Grundsätze – wird bei Aktivierung geladen
-├── references/
-│   ├── blueprints.md                 A–E im Vergleich, Kosten, Lock-in, Wechselkriterien
-│   ├── agent-architektur.md          Backend als API, Tools/MCP, Streaming, State, Mobile Clients
-│   ├── mandanten.md                  1 vs. N Mandanten, RLS-Muster (SQL), Kontext-Objekt
-│   ├── stack-2026-08.md              Kurzfassung der Recherche: Plattformen, Frameworks, Standards
-│   └── recherche-2026-08.md          vollständiger Bericht mit Quellen
-├── assets/
-│   ├── CLAUDE.md.template            Vorlage fürs Projektgedächtnis
-│   ├── adr-template.md               ADR-Vorlage
-│   ├── adr-0001-beispiel.md          ausgefülltes Beispiel
-│   └── adr-0005-mobile.md            ADR-Vorlage für die Mobile-Entscheidung
-└── evals/evals.json                  Testprompts (skill-creator-Plugin)
+SKILL.md                       flow and principles — loaded when the skill activates
+references/
+├── blueprints.md              A–E compared: costs, lock-in, switching criteria
+├── agent-architecture.md      backend as an API, tools/MCP, streaming, state, mobile clients
+├── multi-tenancy.md           1 vs. N tenants, RLS patterns (SQL), context object
+├── stack-2026-08.md           research digest: platforms, frameworks, standards
+└── research-2026-08.md        full report with sources
+assets/
+├── CLAUDE.md.template         template for the project memory
+├── adr-template.md            ADR template
+├── adr-0001-example.md        filled-in example
+└── adr-0005-mobile.md         ADR template for the mobile decision
+evals/evals.json               test prompts (skill-creator plugin)
 ```
 
-Die Referenzdateien werden **nicht** mitgeladen – Claude liest sie nur, wenn sie gebraucht werden.
-Details zum Skill selbst: [`ai-app-architecture/README.md`](ai-app-architecture/README.md).
+The reference files are **not** loaded up front — Claude reads them only when they are needed.
 
-## Eingebaute Skepsis gegen sich selbst
+## Built-in skepticism about itself
 
-Die Recherche ist auf `2026-08` datiert. Liegt der Projektstart mehr als etwa ein halbes Jahr
-später, weist der Skill von sich aus darauf hin und prüft die aktuellen Docs, bevor Versionen
-festgenagelt werden.
+The research is dated `2026-08`. If a project starts more than about half a year later, the skill says so on its own and checks current docs before pinning any versions.
 
-Warum das nötig ist: Zwischen Recherche und Bau des Template-Repos wechselte das MCP-Python-SDK von
-`FastMCP` auf `MCPServer` (2.0). Prinzipien altern langsam, Produktnamen und Preise schnell.
+Why that matters: between the research and the build of the starter repo, the MCP Python SDK moved from `FastMCP` to `MCPServer` (2.0). Principles age slowly; product names and prices age fast.
 
-## Pflege
+## Maintenance
 
-- Erkenntnis aus einem Projekt (bessere Bibliothek, gescheiterte Entscheidung, Preisänderung)
-  → in die passende Datei unter `references/` schreiben.
-- `metadata.version` und `metadata.stand` in `SKILL.md` anziehen, Changelog ergänzen.
-- Nach größeren Änderungen die Testprompts laufen lassen: `/plugin install skill-creator@claude-plugins-official`,
-  dann *"evaluate my ai-app-architecture skill"*. Prüfen, dass der Skill bei „neues KI-Projekt"
-  anspringt und bei „CSV analysieren" **nicht**.
-- Keine Kundendaten, keine Secrets – nur Prinzipien und öffentlich Bekanntes.
+- A finding from a project (a better library, a failed decision, a price change) → write it into the matching file under `references/`.
+- Bump `metadata.version` and `metadata.research_date` in `SKILL.md`, add a changelog entry.
+- After bigger changes, rerun the test prompts: `/plugin install skill-creator@claude-plugins-official`, then *"evaluate my ai-app-blueprints skill"*. Verify it triggers on "new AI project" and does **not** trigger on "analyze this CSV".
+- No client data, no secrets — principles and public information only.
 
 ## Changelog
 
-| Version | Was |
+| Version | What |
 |---|---|
-| **1.2.0** | Blueprint-Wahl reframed: A ist der Default, B–E sind Ausnahme-Ausgänge mit Auslöser; Template-Repo explizit nur für A |
-| **1.1.0** | Mobile Clients: Interview-Frage erweitert, Abschnitt in `agent-architektur.md`, ADR-Vorlage `0005-mobile.md` |
-| **1.0.0** | Erste Fassung aus der Stack-Recherche 2026-08 |
+| **2.0.0** | Translated to English; repo flattened and renamed (`claude-skills` → `ai-app-blueprints`, one repo = one skill); command is now `/ai-app-blueprints` |
+| **1.2.0** | Blueprint choice reframed: A is the default, B–E are exception exits with triggers; starter repo explicitly for A only |
+| **1.1.0** | Mobile clients: interview question extended, section in the architecture reference, ADR template 0005 |
+| **1.0.0** | First version from the August 2026 stack research |
 
-## Lizenz
+## License
 
 [MIT](LICENSE)

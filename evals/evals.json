@@ -1,0 +1,35 @@
+{
+  "skill_name": "ai-app-blueprints",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm starting a new project: an internal assistant that searches our contract documents and answers questions about them. Maybe for several customers later. How do I start, which stack should we use?",
+      "expected_output": "Skill triggers. Asks the context questions in one block (or assumes defaults and names them), picks blueprint A with multi-tenancy from day one, generates docs/adr/0001-architecture.md and CLAUDE.md, points out the freshness check.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Client project at an insurer, everything runs on Azure, the works council demands EU data residency. We're supposed to build an agent that pre-qualifies claims. Architecture proposal please.",
+      "expected_output": "Skill triggers. Picks blueprint D (Azure AI Foundry Agent Service, Microsoft Agent Framework or Responses-compatible agents, EU region, DPA), mentions human-in-the-loop for writing steps, generates an ADR with options and a lock-in note.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We have a Next.js product and want to add a chat assistant with streaming; the team is pure TypeScript. What do you recommend?",
+      "expected_output": "Skill triggers. Picks blueprint B (Next.js + Vercel AI SDK, Mastra if workflows/memory are needed), explains SDK vs. Vercel platform, generates the ADR and CLAUDE.md adjustments.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Can you build me a monthly breakdown from this CSV and a bar chart?",
+      "expected_output": "Skill does NOT trigger — plain data analysis without an LLM component.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "We have the agent backend on FastAPI and a Next.js frontend. Next up is an Android app — how do we proceed?",
+      "expected_output": "Skill triggers. Explains: the app is another client of the same API, the blueprint stays; recommends a PWA test or Expo/React Native (TS team, AI SDK), native only with a reason; lists the backend duties (OIDC/JWT instead of dev headers, /v1 contracts, jobs instead of long streams, uploads, push) and creates ADR 0005.",
+      "files": []
+    }
+  ]
+}

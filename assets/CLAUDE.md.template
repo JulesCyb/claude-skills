@@ -1,0 +1,66 @@
+# {{PROJECT_NAME}}
+
+{{ONE_SENTENCE_PURPOSE}}
+
+Architecture decisions live in `docs/adr/` (start: `0001-architecture.md`). If this file and an ADR contradict each other, the ADR wins — then update this file.
+
+## Stack (blueprint {{BLUEPRINT_LETTER}})
+
+- Backend/API: {{BACKEND_STACK}}   <!-- e.g. FastAPI, Python 3.12, uv -->
+- Agent logic: {{AGENT_FRAMEWORK}}   <!-- e.g. PydanticAI; LangGraph only for <agent-name> -->
+- Models: {{MODEL_ACCESS}}   <!-- e.g. Claude via Bedrock eu-central-1 through LiteLLM; model name in tenant_settings -->
+- Data: {{DATA_STACK}}   <!-- e.g. PostgreSQL 17 + pgvector, RLS on; MinIO for files -->
+- Observability: {{OBSERVABILITY}}   <!-- e.g. Langfuse self-hosted, OTel -->
+- Frontend: {{FRONTEND_OR_NONE}}   <!-- e.g. Next.js + Vercel AI SDK in /web, or "none" -->
+- Operations: {{HOSTING}}   <!-- e.g. Docker Compose on Hetzner (EU) -->
+
+## Commands
+
+```bash
+uv sync                          # environment
+uv run uvicorn app.main:app --reload   # API locally
+uv run pytest                    # tests (must be green before every commit)
+uv run alembic upgrade head      # migrations
+uv run ruff check . && uv run ruff format .   # lint/format
+docker compose up -d             # Postgres & friends
+```
+
+Always `uv run <cmd>`, never a global `python`/`pip`.
+
+## Architecture rules — non-negotiable
+
+1. **Context object**: `RequestContext(tenant_id, user_id, roles)` is created in `app/deps.py` and passed through every request, agent run, tool call, and job. No global state, no module variables for tenant or user.
+2. **Every new table** has `tenant_id uuid NOT NULL REFERENCES tenants(id)`, an index on it, `ENABLE`/`FORCE ROW LEVEL SECURITY`, and a policy `tenant_id = current_setting('app.tenant_id', true)::uuid` (USING and WITH CHECK). A migration without these four things does not get merged.
+3. **Database access** only through the repository layer (`app/repositories/`), which sets `set_config('app.tenant_id', …, true)` per transaction. The app connects as the `app` role (no superuser, `NOBYPASSRLS`); migrations use the owner role.
+4. **Agents access data only through tools** (`app/tools/`) that check the context and return only what is needed. Never a DB connection or raw credentials to the model. Writing tools require a confirmation step.
+5. **Integrations as MCP servers** in `app/mcp/`, using the same tool functions as the backend (shared module, two entry points).
+6. **Models via the provider abstraction** (`app/llm.py`); the model name comes from configuration/`tenant_settings`, never hard-coded.
+7. **Every agent run is traced** (Langfuse/OTel) with `tenant_id`, `user_id`, `request_id`.
+8. **Cache keys** include the `tenant_id`.
+9. **No secrets in the repo**; keep `.env.example` current, ignore `.env`.
+10. **A new agent?** First check whether a single model call with structured output is enough. A PydanticAI agent with tools is the default; LangGraph only with an ADR justification (state machine, checkpoints, human-in-the-loop).
+
+## Conventions
+
+- Python 3.12+, type hints everywhere, Pydantic models for all inputs/outputs, `ruff` as linter/formatter.
+- Tests: `pytest`; agent tests with `TestModel`/`FunctionModel` (no real model call in unit tests); for every repository function, a test that creates a second tenant and verifies isolation.
+- Commits small and topical; conventional commit prefixes (`feat:`, `fix:`, `docs:`, `chore:`).
+- A new decision with real consequences → a new ADR (`docs/adr/NNNN-title.md`, template in the folder).
+
+## Directories
+
+```
+app/            FastAPI app, agents, tools, repositories, MCP server
+migrations/     Alembic
+tests/          pytest
+docs/adr/       architecture decisions
+docs/           further docs (frontend.md, deployment.md)
+{{EXTRA_DIRS}}
+```
+
+## Do not touch without checking first
+
+- RLS policies, roles, and grants in `migrations/`
+- `app/context.py`, `app/deps.py` (the context object)
+- production compose/deployment files
+{{EXTRA_PROTECTED}}
