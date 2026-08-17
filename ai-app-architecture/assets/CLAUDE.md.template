@@ -1,0 +1,66 @@
+# {{PROJECT_NAME}}
+
+{{ONE_SENTENCE_PURPOSE}}
+
+Architekturentscheidungen stehen in `docs/adr/` (Start: `0001-architektur.md`). Bei Widerspruch zwischen dieser Datei und einem ADR gilt das ADR – dann diese Datei nachziehen.
+
+## Stack (Blueprint {{BLUEPRINT_LETTER}})
+
+- Backend/API: {{BACKEND_STACK}}   <!-- z. B. FastAPI, Python 3.12, uv -->
+- Agent-Logik: {{AGENT_FRAMEWORK}}   <!-- z. B. PydanticAI; LangGraph nur für <agent-name> -->
+- Modelle: {{MODEL_ACCESS}}   <!-- z. B. Claude über Bedrock eu-central-1 via LiteLLM; Modellname in tenant_settings -->
+- Daten: {{DATA_STACK}}   <!-- z. B. PostgreSQL 17 + pgvector, RLS an; MinIO für Dateien -->
+- Observability: {{OBSERVABILITY}}   <!-- z. B. Langfuse self-hosted, OTel -->
+- Frontend: {{FRONTEND_OR_NONE}}   <!-- z. B. Next.js + Vercel AI SDK in /web, oder "keins" -->
+- Betrieb: {{HOSTING}}   <!-- z. B. Docker Compose auf Hetzner (EU) -->
+
+## Kommandos
+
+```bash
+uv sync                          # Umgebung
+uv run uvicorn app.main:app --reload   # API lokal
+uv run pytest                    # Tests (müssen vor jedem Commit grün sein)
+uv run alembic upgrade head      # Migrationen
+uv run ruff check . && uv run ruff format .   # Lint/Format
+docker compose up -d             # Postgres & Co.
+```
+
+Immer `uv run <cmd>`, nie ein globales `python`/`pip`.
+
+## Architekturregeln – nicht verhandelbar
+
+1. **Kontext-Objekt**: `RequestContext(tenant_id, user_id, roles)` entsteht in `app/deps.py` und wird durch jeden Request, Agent-Lauf, jedes Tool und jeden Job gereicht. Kein globaler Zustand, keine Modul-Variablen für Mandant oder Nutzer.
+2. **Jede neue Tabelle** hat `tenant_id uuid NOT NULL REFERENCES tenants(id)`, einen Index darauf, `ENABLE`/`FORCE ROW LEVEL SECURITY` und eine Policy `tenant_id = current_setting('app.tenant_id', true)::uuid` (USING und WITH CHECK). Migration ohne diese vier Dinge wird nicht gemergt.
+3. **Datenbank-Zugriff** nur über die Repository-Schicht (`app/repositories/`), die pro Transaktion `set_config('app.tenant_id', …, true)` setzt. Die App verbindet sich mit der Rolle `app` (kein Superuser, `NOBYPASSRLS`); Migrationen mit der Owner-Rolle.
+4. **Agents greifen auf Daten nur über Tools zu** (`app/tools/`), die den Kontext prüfen und nur das Nötige zurückgeben. Nie DB-Verbindung oder rohe Zugangsdaten an das Modell. Schreibende Tools brauchen eine Bestätigung im Ablauf.
+5. **Integrationen als MCP-Server** in `app/mcp/` mit denselben Tool-Funktionen wie im Backend (gemeinsames Modul, zwei Einstiegspunkte).
+6. **Modelle über die Provider-Abstraktion** (`app/llm.py`), Modellname aus Konfiguration/`tenant_settings`, nie hart im Code.
+7. **Jeder Agent-Lauf wird getract** (Langfuse/OTel) mit `tenant_id`, `user_id`, `request_id`.
+8. **Cache-Schlüssel** enthalten die `tenant_id`.
+9. **Keine Secrets im Repo**; `.env.example` pflegen, `.env` ignorieren.
+10. **Neuer Agent?** Zuerst prüfen, ob ein einzelner Modellaufruf mit Structured Output reicht. PydanticAI-Agent mit Tools ist der Default; LangGraph nur mit ADR-Begründung (Zustandsmaschine, Checkpoints, Human-in-the-Loop).
+
+## Konventionen
+
+- Python 3.12+, Type-Hints überall, Pydantic-Modelle für alle Ein-/Ausgaben, `ruff` als Linter/Formatter.
+- Tests: `pytest`, Agent-Tests mit `TestModel`/`FunctionModel` (kein echter Modellaufruf in Unit-Tests); für jede Repository-Funktion ein Test, der einen zweiten Mandanten anlegt und Isolation prüft.
+- Commits klein und thematisch; Konventionelle Commit-Prefixe (`feat:`, `fix:`, `docs:`, `chore:`).
+- Neue Entscheidung mit Tragweite → neues ADR (`docs/adr/NNNN-titel.md`, Vorlage im Ordner).
+
+## Verzeichnisse
+
+```
+app/            FastAPI-App, Agents, Tools, Repositories, MCP-Server
+migrations/     Alembic
+tests/          pytest
+docs/adr/       Architekturentscheidungen
+docs/           weitere Doku (frontend.md, deployment.md)
+{{EXTRA_DIRS}}
+```
+
+## Nicht anfassen ohne Rücksprache
+
+- RLS-Policies, Rollen und Rechte in `migrations/`
+- `app/context.py`, `app/deps.py` (Kontext-Objekt)
+- Produktions-Compose-/Deployment-Dateien
+{{EXTRA_PROTECTED}}

@@ -1,0 +1,29 @@
+{
+  "skill_name": "ai-app-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Ich starte ein neues Projekt: ein interner Assistent, der unsere Vertragsdokumente durchsuchen und Fragen dazu beantworten soll. Später vielleicht für mehrere Kunden. Wie fange ich an, welchen Stack nehmen wir?",
+      "expected_output": "Skill triggert. Stellt die Kontextfragen in einem Block (oder nimmt Defaults an und benennt sie), wählt Blueprint A mit Mandantenfähigkeit von Tag 1, erzeugt docs/adr/0001-architektur.md und CLAUDE.md, weist auf Aktualitätsprüfung hin.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Kundenprojekt bei einem Versicherer, alles läuft auf Azure, Betriebsrat will EU-Datenhaltung. Wir sollen einen Agenten bauen, der Schadensmeldungen vorqualifiziert. Architekturvorschlag bitte.",
+      "expected_output": "Skill triggert. Wählt Blueprint D (Azure AI Foundry Agent Service, Microsoft Agent Framework oder Responses-kompatible Agents, EU-Region, AVV), erwähnt Human-in-the-Loop für schreibende Schritte, erzeugt ADR mit Optionen und Lock-in-Hinweis.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Wir haben ein Next.js-Produkt und wollen einen Chat-Assistenten mit Streaming einbauen, das Team ist reines TypeScript. Was empfiehlst du?",
+      "expected_output": "Skill triggert. Wählt Blueprint B (Next.js + Vercel AI SDK, Mastra bei Workflow-/Memory-Bedarf), erklärt SDK vs. Vercel-Plattform, erzeugt ADR und CLAUDE.md-Anpassungen.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Kannst du mir aus dieser CSV eine Auswertung nach Monat machen und ein Balkendiagramm bauen?",
+      "expected_output": "Skill triggert NICHT – reine Datenanalyse ohne LLM-Anteil.",
+      "files": []
+    }
+  ]
+}
