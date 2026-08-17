@@ -1,8 +1,8 @@
 ---
 name: ai-app-architecture
-description: Architektur- und Stack-Entscheidung für Apps mit KI-Agenten (LLM-Apps, Agent-Backends, RAG, MCP, Multi-Tenant/Mandanten) auf Basis einer Recherche von 2026-08. Führt ein kurzes Interview, wählt den passenden Blueprint (schlanker Python-Stack, TypeScript-Full-Stack, AWS Bedrock/AgentCore, Azure AI Foundry, self-hosted/DSGVO), erzeugt ADRs und CLAUDE.md und startet optional vom Template-Repo. Immer verwenden, wenn ein neues Projekt mit KI/LLM/Agenten gestartet wird oder jemand nach Tech-Stack, Architektur, Framework-Wahl (PydanticAI, LangGraph, Vercel AI SDK, Mastra, Bedrock, Azure Foundry, Vertex, Claude Agent SDK), Agent-Einbindung per API, Datenzugriff für Agents, Mandantenfähigkeit, Tenant-Isolation/RLS oder DSGVO/EU-Hosting einer KI-App fragt – auch wenn nur "neues Projekt anlegen", "wie fange ich an" oder "welchen Stack nehmen wir" gesagt wird. Nicht für reine Datenanalyse-Skripte, einzelne Prompts oder Projekte ohne LLM-Anteil.
+description: Architektur- und Stack-Entscheidung für Apps mit KI-Agenten (LLM-Apps, Agent-Backends, RAG, MCP, Multi-Tenant/Mandanten) auf Basis einer Recherche von 2026-08. Führt ein kurzes Interview, wählt den passenden Blueprint (schlanker Python-Stack, TypeScript-Full-Stack, AWS Bedrock/AgentCore, Azure AI Foundry, self-hosted/DSGVO), erzeugt ADRs und CLAUDE.md und startet optional vom Template-Repo. Immer verwenden, wenn ein neues Projekt mit KI/LLM/Agenten gestartet wird oder jemand nach Tech-Stack, Architektur, Framework-Wahl (PydanticAI, LangGraph, Vercel AI SDK, Mastra, Bedrock, Azure Foundry, Vertex, Claude Agent SDK), Agent-Einbindung per API, Datenzugriff für Agents, Mandantenfähigkeit, Tenant-Isolation/RLS, DSGVO/EU-Hosting oder eine Mobile-App (Android/iOS, Expo/React Native, PWA) als Client eines Agent-Backends fragt – auch wenn nur "neues Projekt anlegen", "wie fange ich an" oder "welchen Stack nehmen wir" gesagt wird. Nicht für reine Datenanalyse-Skripte, einzelne Prompts oder Projekte ohne LLM-Anteil.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   stand: "2026-08"
   template_repo: "https://github.com/JulesCyb/ai-app-template"
   sprache: "de"
@@ -20,7 +20,7 @@ Erst das vorhandene Repo lesen (`pyproject.toml`, `package.json`, `docker-compos
 
 1. **Kontext** – Eigenprojekt/internes Tool oder Kundenprojekt (Enterprise, Compliance, mehrere Teams)?
 2. **Mandanten** – nur einer (jetzt), später mehrere, oder von Anfang an mehrere?
-3. **Oberfläche** – keine (API/CLI), Web-App mit Chat/Streaming, oder bestehende UI anbinden?
+3. **Oberfläche** – keine (API/CLI), Web-App mit Chat/Streaming, bestehende UI anbinden, oder zusätzlich Mobile-App (Android/iOS – jetzt oder später)?
 4. **Cloud-Vorgabe** – keine, AWS, Azure, GCP, oder EU-Anbieter/self-hosted Pflicht?
 5. **Datenschutz** – Standard (EU-Region + AVV), streng (nur EU-Anbieter oder self-hosted), oder unkritisch?
 6. **Datenquellen** – relationale Daten, Dokumente (RAG), Fremdsysteme (welche)?
@@ -35,6 +35,7 @@ Fehlt eine Antwort, Default annehmen und **benennen**: Eigenprojekt, ein Mandant
 - Kunde auf AWS → **C** · Kunde auf Azure/M365 → **D** · Kunde auf GCP → Vertex/ADK (analog C/D)
 - Datenschutz streng oder Self-Hosting Pflicht → **E**
 - Unsicher → **A**, weil portabel; Agent-Logik so schreiben, dass sie später auf C/D/E umzieht.
+- Eine Mobile-App ändert den Blueprint nicht: sie ist ein weiterer Client derselben API (Abschnitt "Mobile Clients" in `references/agent-architektur.md`).
 
 Komponenten, Kosten, Lock-in, Wechselkriterien: `references/blueprints.md`.
 
@@ -47,12 +48,13 @@ Beispiel, warum das nötig ist: Zwischen der Recherche und dem Bau des Template-
 ### 4. Artefakte erzeugen
 
 Immer:
-- `docs/adr/0001-architektur.md` nach `assets/adr-template.md` (ausgefülltes Beispiel: `assets/adr-0001-beispiel.md`). Weitere ADRs nur, wenn wirklich entschieden: `0002-mandanten.md`, `0003-modellzugang.md`, `0004-hosting.md`.
+- `docs/adr/0001-architektur.md` nach `assets/adr-template.md` (ausgefülltes Beispiel: `assets/adr-0001-beispiel.md`). Weitere ADRs nur, wenn wirklich entschieden: `0002-mandanten.md`, `0003-modellzugang.md`, `0004-hosting.md`, `0005-mobile.md` (Vorlage `assets/adr-0005-mobile.md`).
 - `CLAUDE.md` aus `assets/CLAUDE.md.template` – Platzhalter ausfüllen, nicht Verwendetes streichen, nichts Generisches stehen lassen.
 
 Optional:
 - Projektgerüst: Ist `metadata.template_repo` gesetzt, davon starten (`git clone` und `.git` entfernen oder `degit`), Namen, Ports und Platzhalter ersetzen. Sonst minimale Struktur laut Blueprint anlegen.
 - Frontend nur bei Blueprint A mit UI oder B; Vorgehen in `references/agent-architektur.md` (Abschnitt Streaming/UI) und `docs/frontend.md` im Template-Repo.
+- Mobile-App: erst wenn Frage 3 sie nennt; dann `assets/adr-0005-mobile.md` ausfüllen und die Backend-Pflichten aus dem Abschnitt "Mobile Clients" (echte Auth, API-Verträge, Jobs, Uploads, Push) als Aufgaben in die Übergabe aufnehmen.
 
 Kein Code ohne ADR: erst die Entscheidung dokumentieren, dann bauen.
 
@@ -76,11 +78,11 @@ Zusammenfassen: gewählter Blueprint, die fünf wichtigsten Entscheidungen, offe
 ## Referenzen – nur bei Bedarf lesen
 
 - `references/blueprints.md` – Blueprints A–E, Vergleichstabelle, Wechselkriterien. Lesen in Schritt 2.
-- `references/agent-architektur.md` – Backend als API, Agent-Runtime eigen vs. managed, Datenzugriff über Tools/MCP, Streaming zur UI, State/Checkpoints, Observability, Hosting. Lesen, wenn Backend, UI oder Tools gebaut werden.
+- `references/agent-architektur.md` – Backend als API, Agent-Runtime eigen vs. managed, Datenzugriff über Tools/MCP, Streaming zur UI, State/Checkpoints, Observability, Hosting, Mobile Clients. Lesen, wenn Backend, UI, Tools oder eine App gebaut werden.
 - `references/mandanten.md` – ein vs. mehrere Mandanten, RLS-Muster (SQL), Kontext-Objekt (Python), Entscheidungstabelle. Lesen, sobald Frage 2 beantwortet ist.
 - `references/stack-2026-08.md` – Kurzfassung der Recherche: Plattformen (Bedrock/AgentCore, Azure Foundry, Vertex, OpenAI/Anthropic SDKs), Frameworks, Standards (MCP/A2A), Self-Hosting, DSGVO/EU-Anbieter, was veraltet ist. Lesen bei konkreten Framework- oder Plattformfragen.
 - `references/recherche-2026-08.md` – vollständiger Recherchebericht mit Quellen. Nur bei Detailfragen.
-- `assets/CLAUDE.md.template`, `assets/adr-template.md`, `assets/adr-0001-beispiel.md` – Vorlagen für Schritt 4.
+- `assets/CLAUDE.md.template`, `assets/adr-template.md`, `assets/adr-0001-beispiel.md`, `assets/adr-0005-mobile.md` – Vorlagen für Schritt 4.
 
 ## Pflege
 

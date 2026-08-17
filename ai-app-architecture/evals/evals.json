@@ -24,6 +24,12 @@
       "prompt": "Kannst du mir aus dieser CSV eine Auswertung nach Monat machen und ein Balkendiagramm bauen?",
       "expected_output": "Skill triggert NICHT – reine Datenanalyse ohne LLM-Anteil.",
       "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Wir haben das Agent-Backend mit FastAPI und ein Next.js-Frontend. Als nächstes soll eine Android-App dazu – wie gehen wir vor?",
+      "expected_output": "Skill triggert. Erklärt: App = weiterer Client derselben API, Blueprint bleibt; empfiehlt PWA-Test bzw. Expo/React Native (TS-Team, AI SDK), nativ nur mit Grund; listet Backend-Pflichten (OIDC/JWT statt Dev-Header, /v1-Verträge, Jobs statt langer Streams, Uploads, Push) und legt ADR 0005 an.",
+      "files": []
     }
   ]
 }

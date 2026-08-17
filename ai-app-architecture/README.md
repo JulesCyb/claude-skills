@@ -35,6 +35,7 @@ references/recherche-2026-08.md   vollständiger Recherchebericht
 assets/CLAUDE.md.template   Vorlage für die Projekt-CLAUDE.md
 assets/adr-template.md      ADR-Vorlage
 assets/adr-0001-beispiel.md ausgefülltes Beispiel
+assets/adr-0005-mobile.md   ADR-Vorlage Mobile-App (Client des Backends)
 evals/evals.json            Testprompts (skill-creator-Plugin)
 ```
 
@@ -47,4 +48,5 @@ evals/evals.json            Testprompts (skill-creator-Plugin)
 
 ## Changelog
 
+- 1.1.0 (2026-08) – Mobile Clients: Frage 3 erweitert, Abschnitt in agent-architektur.md, ADR-Vorlage 0005, Testprompt.
 - 1.0.0 (2026-08) – Erste Fassung aus der Stack-Recherche 2026-08.
