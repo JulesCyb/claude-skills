@@ -131,3 +131,7 @@ Warum das nötig ist: Zwischen Recherche und Bau des Template-Repos wechselte da
 | **1.2.0** | Blueprint-Wahl reframed: A ist der Default, B–E sind Ausnahme-Ausgänge mit Auslöser; Template-Repo explizit nur für A |
 | **1.1.0** | Mobile Clients: Interview-Frage erweitert, Abschnitt in `agent-architektur.md`, ADR-Vorlage `0005-mobile.md` |
 | **1.0.0** | Erste Fassung aus der Stack-Recherche 2026-08 |
+
+## Lizenz
+
+[MIT](LICENSE)
