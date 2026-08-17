@@ -48,5 +48,6 @@ evals/evals.json            Testprompts (skill-creator-Plugin)
 
 ## Changelog
 
+- 1.2.0 (2026-08) – Blueprint-Wahl reframed: A als Default, B–E als Ausnahme-Ausgänge mit Auslöser; Template-Repo explizit nur für Blueprint A (E als Basis).
 - 1.1.0 (2026-08) – Mobile Clients: Frage 3 erweitert, Abschnitt in agent-architektur.md, ADR-Vorlage 0005, Testprompt.
 - 1.0.0 (2026-08) – Erste Fassung aus der Stack-Recherche 2026-08.

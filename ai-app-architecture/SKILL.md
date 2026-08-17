@@ -2,7 +2,7 @@
 name: ai-app-architecture
 description: Architektur- und Stack-Entscheidung für Apps mit KI-Agenten (LLM-Apps, Agent-Backends, RAG, MCP, Multi-Tenant/Mandanten) auf Basis einer Recherche von 2026-08. Führt ein kurzes Interview, wählt den passenden Blueprint (schlanker Python-Stack, TypeScript-Full-Stack, AWS Bedrock/AgentCore, Azure AI Foundry, self-hosted/DSGVO), erzeugt ADRs und CLAUDE.md und startet optional vom Template-Repo. Immer verwenden, wenn ein neues Projekt mit KI/LLM/Agenten gestartet wird oder jemand nach Tech-Stack, Architektur, Framework-Wahl (PydanticAI, LangGraph, Vercel AI SDK, Mastra, Bedrock, Azure Foundry, Vertex, Claude Agent SDK), Agent-Einbindung per API, Datenzugriff für Agents, Mandantenfähigkeit, Tenant-Isolation/RLS, DSGVO/EU-Hosting oder eine Mobile-App (Android/iOS, Expo/React Native, PWA) als Client eines Agent-Backends fragt – auch wenn nur "neues Projekt anlegen", "wie fange ich an" oder "welchen Stack nehmen wir" gesagt wird. Nicht für reine Datenanalyse-Skripte, einzelne Prompts oder Projekte ohne LLM-Anteil.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   stand: "2026-08"
   template_repo: "https://github.com/JulesCyb/ai-app-template"
   sprache: "de"
@@ -30,12 +30,13 @@ Fehlt eine Antwort, Default annehmen und **benennen**: Eigenprojekt, ein Mandant
 
 ### 2. Blueprint wählen
 
-- Eigenprojekt oder internes Tool, Python-Team → **A** (Python-Backend als API, optional Next.js-Frontend)
-- Produkt ist im Kern eine Chat-/React-UI, TS-Team, keine schweren RAG-/Eval-Pipelines → **B**
+**Default ist A** (Python-Backend als API, optional Next.js-Frontend) – portabel, mit Claude Code am besten scaffoldbar, ohne Lock-in; Agent-Logik so schreiben, dass sie später auf C/D/E umzieht. Von A nur abweichen, wenn eine Antwort aus dem Interview es erzwingt:
+
+- Team ist TypeScript **und** das Produkt ist im Kern eine Chat-/React-UI, keine schweren RAG-/Eval-Pipelines → **B**
 - Kunde auf AWS → **C** · Kunde auf Azure/M365 → **D** · Kunde auf GCP → Vertex/ADK (analog C/D)
 - Datenschutz streng oder Self-Hosting Pflicht → **E**
-- Unsicher → **A**, weil portabel; Agent-Logik so schreiben, dass sie später auf C/D/E umzieht.
-- Eine Mobile-App ändert den Blueprint nicht: sie ist ein weiterer Client derselben API (Abschnitt "Mobile Clients" in `references/agent-architektur.md`).
+
+Greift kein Auslöser (auch bei Unsicherheit): **A**. Eine Mobile-App ändert den Blueprint nicht: sie ist ein weiterer Client derselben API (Abschnitt "Mobile Clients" in `references/agent-architektur.md`).
 
 Komponenten, Kosten, Lock-in, Wechselkriterien: `references/blueprints.md`.
 
@@ -52,7 +53,7 @@ Immer:
 - `CLAUDE.md` aus `assets/CLAUDE.md.template` – Platzhalter ausfüllen, nicht Verwendetes streichen, nichts Generisches stehen lassen.
 
 Optional:
-- Projektgerüst: Ist `metadata.template_repo` gesetzt, davon starten (`git clone` und `.git` entfernen oder `degit`), Namen, Ports und Platzhalter ersetzen. Sonst minimale Struktur laut Blueprint anlegen.
+- Projektgerüst: Das Template-Repo (`metadata.template_repo`) gilt für **Blueprint A** – davon starten (`git clone` und `.git` entfernen oder `degit`), Namen, Ports und Platzhalter ersetzen; bei E als Basis brauchbar (Modell-Serving kommt dazu). Bei B–D stattdessen minimale Struktur laut Blueprint anlegen – eigene Templates entstehen erst aus einem echten Projekt.
 - Frontend nur bei Blueprint A mit UI oder B; Vorgehen in `references/agent-architektur.md` (Abschnitt Streaming/UI) und `docs/frontend.md` im Template-Repo.
 - Mobile-App: erst wenn Frage 3 sie nennt; dann `assets/adr-0005-mobile.md` ausfüllen und die Backend-Pflichten aus dem Abschnitt "Mobile Clients" (echte Auth, API-Verträge, Jobs, Uploads, Push) als Aufgaben in die Übergabe aufnehmen.
 

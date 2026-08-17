@@ -4,10 +4,10 @@ Meine Claude-Code-Skills. Aktuell einer: **`ai-app-architecture`** – er trifft
 mit KI-Agenten dieselben, belegten Architekturentscheidungen, statt sie jedes Mal neu zu recherchieren.
 
 <p align="center">
-  <img src="docs/ablauf.svg" alt="Ablauf des Skills: vom Satz „neues Projekt mit KI-Agenten“ über einen Fragenblock und die Blueprint-Wahl zu ADRs, CLAUDE.md und dem Projektgerüst" width="100%">
+  <img src="docs/ablauf.svg" alt="Ablauf des Skills: vom Satz „neues Projekt mit KI-Agenten“ über einen Fragenblock zur Blueprint-Wahl — A als Default-Pfad, B bis E als Ausnahme-Ausgänge — und weiter zu ADRs, CLAUDE.md und dem Projektgerüst" width="100%">
 </p>
 
-<p align="center"><sub><a href="https://excalidraw.com/#json=xcFFre0m9XcAEnqssH4uk,6ogDIbBOocHGY5CLj3xeqw">Diagramm in Excalidraw öffnen und bearbeiten</a></sub></p>
+<p align="center"><sub><a href="https://excalidraw.com/#json=UWwbVWE2P_53Uja-sxB46,34RXBj8y5bIs3L4wWrKhww">Diagramm in Excalidraw öffnen und bearbeiten</a></sub></p>
 
 ---
 
@@ -26,17 +26,22 @@ Der Skill macht daraus einen festen Ablauf: **kurzes Interview → Blueprint →
 Entscheidung → optional fertiges Gerüst.** Grundlage ist eine Recherche vom August 2026, die als
 Referenzdateien im Repo liegt – nachlesbar und korrigierbar.
 
-Fünf Blueprints stehen zur Wahl:
+Die fünf Blueprints sind dabei keine gleichwertigen Menüpunkte. **Blueprint A ist der Default** –
+Python-Backend als API (FastAPI + PydanticAI), portabel genug, um später umzuziehen, ohne die
+Agent-Logik neu zu schreiben. Von A weicht der Skill nur ab, wenn eine Randbedingung es erzwingt:
 
-| | Blueprint | Wann |
-|---|---|---|
-| **A** | Python-Backend (FastAPI + PydanticAI) | Eigenprojekt, internes Tool, Python-Team – **der Default** |
-| **B** | TypeScript-Full-Stack | Das Produkt *ist* im Kern eine Chat-UI, TS-Team |
-| **C** | AWS Bedrock / AgentCore | Kunde liegt auf AWS |
-| **D** | Azure AI Foundry | Kunde liegt auf Azure/M365 |
-| **E** | Self-hosted | Datenschutz streng oder Self-Hosting Pflicht |
+| Auslöser | Ausgang |
+|---|---|
+| Team ist TypeScript **und** das Produkt ist im Kern eine Chat-UI | **B** – TypeScript-Full-Stack |
+| Kunde liegt auf AWS | **C** – Bedrock / AgentCore |
+| Kunde liegt auf Azure / M365 | **D** – Azure AI Foundry |
+| Datenschutz streng, Self-Hosting Pflicht | **E** – self-hosted |
 
-Im Zweifel **A**: portabel genug, um später auf C, D oder E umzuziehen.
+(Kunde auf GCP → Vertex/ADK, analog C/D.) Greift kein Auslöser, bleibt es A.
+
+Ein Template-Repo gibt es bewusst nur für den Default: Templates für Ausnahmefälle würden
+veralten, bevor sie je benutzt werden. Entsteht ein echtes B- oder E-Projekt, wird das Template
+daraus extrahiert – nicht vorher erfunden.
 
 ## Installation
 
@@ -74,7 +79,7 @@ nicht beantwortest, wird als Default angenommen und benannt.
 - `docs/adr/0001-architektur.md` – die Entscheidung mit Begründung und Alternativen
 - `CLAUDE.md` – Projektgedächtnis für Claude Code, ausgefüllt statt generisch
 - weitere ADRs, aber nur wenn wirklich etwas entschieden wurde (Mandanten, Modellzugang, Hosting, Mobile)
-- auf Wunsch ein lauffähiges Projektgerüst aus **[ai-app-template](https://github.com/JulesCyb/ai-app-template)**
+- auf Wunsch ein lauffähiges Projektgerüst – bei Blueprint A aus **[ai-app-template](https://github.com/JulesCyb/ai-app-template)**, bei B–E eine minimale Struktur laut Blueprint
 
 Grundregel: **kein Code ohne ADR.** Erst die Entscheidung dokumentieren, dann bauen.
 
@@ -123,5 +128,6 @@ Warum das nötig ist: Zwischen Recherche und Bau des Template-Repos wechselte da
 
 | Version | Was |
 |---|---|
+| **1.2.0** | Blueprint-Wahl reframed: A ist der Default, B–E sind Ausnahme-Ausgänge mit Auslöser; Template-Repo explizit nur für A |
 | **1.1.0** | Mobile Clients: Interview-Frage erweitert, Abschnitt in `agent-architektur.md`, ADR-Vorlage `0005-mobile.md` |
 | **1.0.0** | Erste Fassung aus der Stack-Recherche 2026-08 |
