@@ -30,6 +30,24 @@
       "prompt": "We have the agent backend on FastAPI and a Next.js frontend. Next up is an Android app — how do we proceed?",
       "expected_output": "Skill triggers. Explains: the app is another client of the same API, the blueprint stays; recommends a PWA test or Expo/React Native (TS team, AI SDK), native only with a reason; lists the backend duties (OIDC/JWT instead of dev headers, /v1 contracts, jobs instead of long streams, uploads, push) and creates ADR 0005.",
       "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Our client runs everything on AWS and wants an agent that answers questions over their internal wiki. Compliance requires EU data residency. What architecture do you propose?",
+      "expected_output": "Skill triggers. Picks blueprint C (Bedrock AgentCore, EU geo cross-region inference in Frankfurt, Knowledge Bases or pgvector via tools), notes medium-to-high lock-in mitigated by framework-agnostic agent code and MCP tools, generates an ADR with options.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Public-sector client: the contract says all data and models must stay on our own EU servers, no US cloud APIs. They still want a document assistant. Which stack?",
+      "expected_output": "Skill triggers. Picks blueprint E (vLLM or SGLang serving open tool-calling models like Qwen3/gpt-oss, PydanticAI, pgvector, Langfuse and LiteLLM self-hosted), mentions the ai-app-starter as a base with model serving added, generates an ADR.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Add OAuth login to our existing Flask shop and write tests for the checkout flow.",
+      "expected_output": "Skill does NOT trigger — ordinary web development without an LLM component.",
+      "files": []
     }
   ]
 }

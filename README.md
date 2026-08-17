@@ -1,12 +1,14 @@
 # ai-app-blueprints
 
+[![CI](https://github.com/JulesCyb/ai-app-blueprints/actions/workflows/ci.yml/badge.svg)](https://github.com/JulesCyb/ai-app-blueprints/actions/workflows/ci.yml)
+
 A Claude Code skill that makes the stack decision for AI-agent apps — once, in one interview, with receipts.
 
 <p align="center">
   <img src="docs/flow.svg" alt="Flow of the skill: from saying 'new project with AI agents' through one question block to the blueprint decision — A as the default path, B through E as exception exits — and on to ADRs, CLAUDE.md, and the project scaffold" width="100%">
 </p>
 
-<p align="center"><sub><a href="https://excalidraw.com/#json=juWBda5kxa0ieqeo42w10,ncqE20m9pSF0WhPYZ3ObYA">Open and edit the diagram in Excalidraw</a></sub></p>
+<p align="center"><sub><a href="https://excalidraw.com/#json=iOEKDTRymrWp55pk8F9tG,DUsqkkSmw2Shs05mf9VwSA">Open and edit the diagram in Excalidraw</a></sub></p>
 
 ---
 
@@ -20,7 +22,7 @@ Those questions get re-researched every time, usually under deadline pressure, a
 
 It turns the argument into a routine: **one interview → one blueprint → documented decisions → a working scaffold.** The recommendations come from a written-down research pass (August 2026) that lives in this repo as reference files — readable, checkable, correctable.
 
-The point is **rapid prototyping without closing doors**: the default stack is the one you can build on *today* and still move to AWS, Azure, GCP, or fully self-hosted *later* — without rewriting the agent logic. Anything vendor-shaped stays behind an interface.
+The point is **rapid prototyping without closing doors**: the default stack is the one you can build on *today* and still move to AWS, Azure, GCP, or fully self-hosted *later*. Your tools (MCP), data layer, and API contract move with you; on AgentCore and self-hosted, the agent logic itself carries over unchanged — on Azure Foundry, the thin orchestration layer is rebuilt on its runtime. Anything vendor-shaped stays behind an interface.
 
 ## One default, four exits
 
@@ -49,7 +51,7 @@ ln -s ~/src/ai-app-blueprints ~/.claude/skills/ai-app-blueprints
 
 A `git pull` then updates the skill for every project at once.
 
-**Per project:** copy this repo's contents into `.claude/skills/ai-app-blueprints/` and commit — everyone in the repo gets the skill.
+**Per project:** copy `SKILL.md`, `references/`, `assets/`, and `evals/` into `.claude/skills/ai-app-blueprints/` (leave `.git` behind) and commit — everyone in the repo gets the skill.
 
 **For a team:** publish it as a plugin in a marketplace, or roll it out via your organization's managed settings.
 
@@ -69,7 +71,25 @@ You get **one** block of seven questions — not seven follow-ups in a row. Anyt
 - `docs/adr/0001-architecture.md` — the decision, with reasoning and alternatives
 - `CLAUDE.md` — project memory for Claude Code, filled in rather than generic
 - more ADRs, but only when something was actually decided (tenancy, model access, hosting, mobile)
-- on request, a running scaffold — for blueprint A from **[ai-app-starter](https://github.com/JulesCyb/ai-app-starter)**, for B–E a minimal structure per blueprint
+- on request, a running scaffold — for blueprint A from **[ai-app-starter](https://github.com/JulesCyb/ai-app-starter)** (E uses it as a base, with model serving added on top); B–D get a minimal structure per blueprint
+
+What a run looks like:
+
+```text
+> internal assistant that searches our contract documents — maybe several customers later
+
+Interview (one block): own project · tenants later · web app · no cloud mandate
+                       · EU region · documents + DB · Python
+→ Blueprint A.
+
+docs/adr/0001-architecture.md  "We choose blueprint A: FastAPI + PydanticAI, Postgres 17
+                                + pgvector with RLS … revisit when a customer demands
+                                physical data separation."
+CLAUDE.md                       filled in — multi-tenant rules, commands, conventions
+scaffold                        from ai-app-starter, tests incl. a real RLS isolation test
+```
+
+The full generated decision document: [assets/adr-0001-example.md](assets/adr-0001-example.md).
 
 Ground rule: **no code without an ADR.** Decide first, then build.
 
@@ -81,14 +101,16 @@ references/
 ├── blueprints.md              A–E compared: costs, lock-in, switching criteria
 ├── agent-architecture.md      backend as an API, tools/MCP, streaming, state, mobile clients
 ├── multi-tenancy.md           1 vs. N tenants, RLS patterns (SQL), context object
-├── stack-2026-08.md           research digest: platforms, frameworks, standards
-└── research-2026-08.md        full report with sources
+├── stack-2026-08.md           research digest — incl. the source list
+└── research-2026-08.md        full research report (sources: see the digest)
 assets/
 ├── CLAUDE.md.template         template for the project memory
 ├── adr-template.md            ADR template
 ├── adr-0001-example.md        filled-in example
 └── adr-0005-mobile.md         ADR template for the mobile decision
 evals/evals.json               test prompts (skill-creator plugin)
+docs/flow.svg                  the diagram embedded above
+LICENSE                        MIT
 ```
 
 The reference files are **not** loaded up front — Claude reads them only when they are needed.
@@ -110,10 +132,13 @@ Why that matters: between the research and the build of the starter repo, the MC
 
 | Version | What |
 |---|---|
+| **2.1.0** | Review round: trigger description scoped to AI projects, blueprint-neutral principle 10, evals for C and E plus a second negative case, E-scaffold clarified, example ADR linked, CI with repo self-checks |
 | **2.0.0** | Translated to English; repo flattened and renamed (`claude-skills` → `ai-app-blueprints`, one repo = one skill); command is now `/ai-app-blueprints` |
 | **1.2.0** | Blueprint choice reframed: A is the default, B–E are exception exits with triggers; starter repo explicitly for A only |
 | **1.1.0** | Mobile clients: interview question extended, section in the architecture reference, ADR template 0005 |
 | **1.0.0** | First version from the August 2026 stack research |
+
+Issues and PRs are welcome — for changes to the references, include a source.
 
 ## License
 

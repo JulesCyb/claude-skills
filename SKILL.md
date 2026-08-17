@@ -1,8 +1,8 @@
 ---
 name: ai-app-blueprints
-description: Architecture and stack decisions for apps with AI agents (LLM apps, agent backends, RAG, MCP, multi-tenant SaaS), based on research from 2026-08. Runs a short interview, picks the right blueprint (lean Python stack, TypeScript full-stack, AWS Bedrock/AgentCore, Azure AI Foundry, self-hosted/GDPR), generates ADRs and a CLAUDE.md, and optionally scaffolds from a starter repo. Use whenever a new project with AI/LLM/agents is started, or when someone asks about tech stacks, architecture, framework choice (PydanticAI, LangGraph, Vercel AI SDK, Mastra, Bedrock, Azure Foundry, Vertex, Claude Agent SDK), embedding agents via API, agent data access, multi-tenancy, tenant isolation/RLS, GDPR/EU hosting, or a mobile app (Android/iOS, Expo/React Native, PWA) as a client of an agent backend — even if the request is just "start a new project", "how do I begin", or "which stack should we use". Not for plain data-analysis scripts, single prompts, or projects without an LLM component.
+description: Architecture and stack decisions for apps with AI agents (LLM apps, agent backends, RAG, MCP, multi-tenant SaaS), based on research from 2026-08. Runs a short interview, picks the right blueprint (lean Python stack, TypeScript full-stack, AWS Bedrock/AgentCore, Azure AI Foundry, self-hosted/GDPR), generates ADRs and a CLAUDE.md, and optionally scaffolds from a starter repo. Use whenever a new project involving AI/LLM/agents starts, or for questions about the tech stack or architecture of an AI app, framework choice (PydanticAI, LangGraph, Vercel AI SDK, Mastra, Bedrock, Azure Foundry, Vertex, Claude Agent SDK), embedding agents via API, agent data access, multi-tenancy, tenant isolation/RLS, GDPR/EU hosting, or a mobile app (Android/iOS, Expo/React Native, PWA) as a client of an agent backend — even for requests as vague as "start a new project" or "which stack should we use", provided AI/LLM/agents are in scope. Not for plain data-analysis scripts, single prompts, or projects without an LLM part.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   research_date: "2026-08"
   template_repo: "https://github.com/JulesCyb/ai-app-starter"
   language: "en"
@@ -10,7 +10,7 @@ metadata:
 
 # AI App Blueprints
 
-Make the same, evidence-backed decisions at every AI-agent project start instead of researching from scratch. The output is a set of ADRs, a `CLAUDE.md`, and optionally a project scaffold from the starter repo. Artifacts are written in the user's language; file names stay English.
+Make the same, evidence-backed decisions every time an AI-agent project starts, instead of researching from scratch. The output is a set of ADRs, a `CLAUDE.md`, and optionally a project scaffold from the starter repo. Artifacts are written in the user's language; file names stay English.
 
 ## Flow
 
@@ -68,13 +68,13 @@ Summarize: chosen blueprint, the five most important decisions, open points, wha
 1. Agent logic runs as its own backend service with an API; never merge UI and agent. Models via API (Claude/GPT/Bedrock/Azure), not locally — except blueprint E.
 2. A context object (`tenant_id`, `user_id`, roles) is passed through every request, agent run, tool call, and background job. Nothing reads global state.
 3. Every table has a `tenant_id`, Postgres Row-Level Security is on, embeddings are data. The app's DB role is **not a superuser** — otherwise RLS does not apply.
-4. Agents access data only through tools that run with the logged-in user's permissions. Never hand DB credentials to the model. Tools return only what is needed — everything returned ends up in the prompt at the model provider.
+4. Agents access data only through tools that run with the logged-in user's permissions. Never hand DB credentials to the model. Tools return only what is needed — everything returned ends up in the prompt sent to the model provider.
 5. Build your own integrations as MCP servers — once, then use them in Claude Code, in the product, and on managed platforms.
 6. Provider abstraction for models (framework provider or LiteLLM). Model choice, prompts, limits, and third-party credentials configurable per tenant, not in `.env`.
 7. Observability from day one (Langfuse or OTel-compatible) with a tenant tag; costs attributable per tenant.
 8. No low-code at the core. No secrets in the repo. EU region as the default, check the DPA.
 9. Cache keys (embeddings, responses, prompt cache) include the `tenant_id`.
-10. Start simple: a PydanticAI agent with tools. LangGraph only once an agent needs a real state machine with checkpoints or human-in-the-loop. Roughly 40% of "agent" tasks are a single model call with structured output.
+10. Start simple: one typed agent with tools (PydanticAI on A/E, or the platform's agent SDK on B–D). Add a graph/state-machine layer (LangGraph or the platform equivalent) only once an agent needs checkpoints or human-in-the-loop. Roughly 40% of "agent" tasks are a single model call with structured output.
 
 ## References — read only when needed
 

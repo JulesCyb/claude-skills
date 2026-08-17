@@ -2,7 +2,7 @@
 <defs><marker id="ah22c55e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 1 L 10 5 L 0 9 z" fill="#22c55e"/></marker><marker id="ah6b7280" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 1 L 10 5 L 0 9 z" fill="#6b7280"/></marker><marker id="ahf59e0b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"/></marker></defs>
 <rect width="1200" height="1005" rx="18" fill="#ffffff"/>
 <text x="590" y="48" text-anchor="middle" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#111827">ai-app-blueprints</text>
-<text x="590" y="78" text-anchor="middle" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="500" fill="#6b7280">A Claude Code skill: the same stack decisions at every AI-agent project start</text>
+<text x="590" y="78" text-anchor="middle" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="500" fill="#6b7280">A Claude Code skill: the same stack decisions every time you start an AI-agent project</text>
 <rect x="60" y="135" width="300" height="88" rx="11" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
 <text x="210.0" y="160.3" text-anchor="middle" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1f2937">You say:</text>
 <text x="210.0" y="185.1" text-anchor="middle" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="500" fill="#4b5563">“new project with</text>
@@ -46,7 +46,7 @@
 <path d="M 600 524 L 600 676" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah22c55e)"/>
 <path d="M 1010 654 L 1010 676" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#ahf59e0b)"/>
 <rect x="40" y="680" width="1100" height="190" rx="14" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5" stroke-dasharray="6 5" opacity="0.95"/>
-<text x="60" y="705" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1.4" fill="#15803d">OUTPUT  —  SAME FOR EVERY BLUEPRINT</text>
+<text x="60" y="705" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1.4" fill="#15803d">OUTPUT  —  DECISIONS FOR EVERY BLUEPRINT · SCAFFOLD FOR A</text>
 <rect x="65" y="715" width="250" height="74" rx="11" fill="#cffafe" stroke="#06b6d4" stroke-width="2"/>
 <text x="190.0" y="735.0" text-anchor="middle" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#1f2937">ADR</text>
 <text x="190.0" y="756.7" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, 'JetBrains Mono', Consolas, monospace" font-size="13" font-weight="500" fill="#4b5563">docs/adr/0001-</text>
