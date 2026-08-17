@@ -6,7 +6,7 @@ Ein Skill, der bei jedem Projektstart mit KI-Agenten dieselben, belegten Archite
 
 **Persönlich (alle Projekte):**
 ```bash
-git clone <URL-dieses-Repos> ~/src/claude-skills
+git clone https://github.com/JulesCyb/claude-skills ~/src/claude-skills
 ln -s ~/src/claude-skills/ai-app-architecture ~/.claude/skills/ai-app-architecture
 ```
 Claude Code folgt Symlinks; ein `git pull` aktualisiert den Skill für alle Projekte.
@@ -21,7 +21,7 @@ Claude Code folgt Symlinks; ein `git pull` aktualisiert den Skill für alle Proj
 - Direkt: `/ai-app-architecture` (optional mit Stichworten: `/ai-app-architecture Kundenprojekt Azure, mehrere Mandanten`).
 - Ergebnis: `docs/adr/0001-architektur.md`, `CLAUDE.md`, ggf. weitere ADRs und ein Projektgerüst.
 
-Vor dem ersten Einsatz in `SKILL.md` unter `metadata.template_repo` die URL des Template-Repos eintragen.
+`metadata.template_repo` in `SKILL.md` zeigt auf <https://github.com/JulesCyb/ai-app-template>.
 
 ## Struktur
 
